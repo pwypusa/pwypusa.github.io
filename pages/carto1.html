@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+ 
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+   
+    <style>
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+	  #sideBar {
+		overflow-y:auto;
+		position:absolute;
+		z-index:10;
+		right:0;
+		text-align:right;
+		top:0;
+		position:absolute;
+		height:100%;
+		width:275px;
+		background:grey;
+		-webkit-box-shadow:0 0 20px #000;
+		box-shadow:0 0 20px #000
+	  }
+	  #title {
+		color:#fff;
+		margin:5px;
+		line-height:40px;
+		font-size:32px;
+		padding-top:10px;
+		font-weight:bold;
+		text-align:center;
+		font-family:'Arvo',serif
+	  }
+	  #head {
+		text-align:center;
+		margin-top:40px;
+		color:#fff;
+		font-size:20px;
+		font-family:'Arvo',serif;
+		font-weight:bold;
+		color:#2f4257
+	  }
+	  #pwypLogo {
+		overflow-y:auto;
+		position:absolute;
+		z-index:10;
+		left:0;
+		text-align:right;
+		top:0;
+		position:absolute;
+		height:100%;
+		width:275px;
+	  }
+	  #lease_info {
+		height: 250px;
+		overflow: auto;
+        position: relative;
+      }
+	  table {
+		border-collapse: collapse;
+	  }
+	  th, td {
+		border-bottom: 1px solid #ddd;
+	  }
+	  th {
+		background-color: #f0f2cd;
+		font-size: 14px;
+	  }
+	  td {
+		text-align: left;
+		font-size: 12px;
+	  }
+	  tr:nth-child(even) {
+		background-color: #f2f2f2
+	  }
+	  tr:nth-child(odd) {
+		background-color: #f2f2f2
+	  }
+      #layer_selector {
+		position: relative;
+		text-align:left;
+        
+        right: 20px;
+        padding-left: 30px;
+      }
+      #layer_selector ul {
+        padding: 0; margin: 0;
+        list-style-type: none;
+      }
+      #layer_selector li {
+        <!-- border-bottom: 1px solid #999; -->
+        padding: 3px 15px;
+        font-family: "Helvetica", Arial;
+        font-size: 13px;
+        <!-- background-color: #f6d119; -->        
+      }
+	  #layer_selector li:hover {
+        background-color: #F0F0F0;
+        cursor: pointer;
+      }
+      #layer_selector li.selected {
+        background-color: #e55202;
+      }
+    </style>
+
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+  </head>
+  <body>
+    <div id="map"></div>
+	<div id="pwypLogo"> <img src="http://publishwhatyoupay.com/wp-content/uploads/2015/10/logo-300x142.jpg"> </div>
+	<div id='sideBar'>
+		<div id="title">Gulf of Mexico Lease Explorer</div>
+		<div id="head">
+		
+			<div id="subhead1">Click on a lease block to view the current owners</div>
+			<div id="lease_info"> </div>
+			<div id='layer_selector'>
+				 <ul>
+				  <li><input type="checkbox" id="anadarko" name="xlayer"><label for="anadarko">Anadarko</label></li>
+				  <li><input type="checkbox" id="bhp" name="xlayer"><label for="bhp">BHP</label></li>
+				  <li><input type="checkbox" id="bp" name="xlayer"><label for="bp">BP</label></li>
+				  <li><input type="checkbox" id="conoco" name="xlayer"><label for="conoco">ConocoPhillips</label></li>
+				  <li><input type="checkbox" id="chevron" name="xlayer"><label for="chevron">Chevron</label></li>
+				  <li><input type="checkbox" id="exxon" name="xlayer"><label for="exxon">ExxonMobil</label></li>
+				  <li><input type="checkbox" id="shell" name="xlayer"><label for="shell">Shell</label></li>
+				  <li><input type="checkbox" id="statoil" name="xlayer"><label for="statoil">Statoil</label></li>
+				  <li><input type="checkbox" id="total_sa" name="xlayer"><label for="total_sa">Total S.A.</label></li>
+				  <li id="words">words</li>
+				</ul>
+			</div>
+		
+		</div>
+	</div>
+
+    <!-- Different way to create the botton list -->
+    
+ 
+
+    <!-- include cartodb.js library -->
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+	<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_5r57t7SJDO_mLoAAVGoupkPb6VqRAuA"></script> -->
+	
+    <script>
+            
+      function main() {
+	  
+	    var sublayers = [];
+        // Layers definition
+        var layers = {
+          bhp:  {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 2277',
+			cartocss: '#final_1{polygon-fill: #e65400; line-color: white; }',
+			interactivity: 'name, mms_num'
+          },
+		  bp: {
+            sql: 'SELECT * FROM final_1 WHERE mms_num IN (2481,114)',
+			cartocss: '#final_1{polygon-fill: #009400; line-color: white; }',
+			interactivity: 'name'
+          },
+		  shell: {
+            sql: 'SELECT * FROM final_1 WHERE mms_num IN (689,2117)',
+			cartocss: '#layer{polygon-fill: #f6d119; line-color: white; }',
+			interactivity: 'name'
+          },
+		  statoil: {
+            sql: 'SELECT * FROM final_1 WHERE mms_num IN (2528, 2748)',
+			cartocss: '#layer{polygon-fill: #de569b; line-color: white; }',
+			interactivity: 'name'
+          },
+		  total_sa: {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 1500',
+			cartocss: '#layer{polygon-fill: #002776; line-color: white; }',
+			interactivity: 'name'
+          },
+		  anadarko:  {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 2219',
+			cartocss: '#final_1{polygon-fill: #005cb9; line-color: white; }',
+			interactivity: 'name, mms_num'
+          },
+		  chevron:  {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 78',
+			cartocss: '#final_1{polygon-fill: #2490c9; line-color: white; }',
+			interactivity: 'name, mms_num'
+          },
+		  conoco:  {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 56',
+			cartocss: '#final_1{polygon-fill: #2490c9; line-color: white; }',
+			interactivity: 'name, mms_num'
+          },
+		  exxon:  {
+            sql: 'SELECT * FROM final_1 WHERE mms_num = 276',
+			cartocss: '#final_1{polygon-fill: #df0032; line-color: white; }',
+			interactivity: 'name, mms_num'
+          }
+		 };
+		 
+        var map = L.map('map', { 
+                  zoomControl: true,
+                  center: [27.5,-91],
+                  zoom: 7
+                });
+       
+		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'}).addTo(map);
+        
+		function customClickFunction(Xlong, Xlat) {
+											console.log("From the function-" + "Lat: " + Xlat + "|" + 'Long: ' + Xlong);
+											var sql = new cartodb.SQL({ user: 'pwypusa' });
+											sql.execute("SELECT * FROM final_1 WHERE ST_Contains(final_1.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))")
+												.done(function(data){console.log(data.rows)});
+											q="SELECT * FROM final_1 WHERE ST_Contains(final_1.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))"
+											$.ajax({//    https://pwypusa.carto.com/api/v2/sql?q=
+													url: "https://pwypusa.carto.com/api/v2/sql?q=" + q,
+													dataType: "jsonp",
+													success: function(data) {
+													  var dat = data.rows
+													  // pull out the fields of interest and order the results
+													  var lease_num = _.pluck(dat, 'lease_number');
+													  var owner = _.pluck(dat, 'name');
+													  var own_per = _.pluck(dat, 'ownership_percent');
+													  console.log(lease_num);
+													  if(owner.length > 1) {
+														console.log("There are " + owner.length + " owners.");
+														} else if (owner.length===1) {
+														console.log(owner + " is the owner.");
+														} else {};
+													  //$('#lease_info').html('<table border="1">' +
+														//					 '<tr><td>Company</td><td>Ownership Percent</td></tr>' +
+															//				 '<tr><td>'+owner[0]+'</td><td>'+own_per[0]+'</td></tr>' +
+																//			 '<tr><td>'+owner[1]+'</td><td>'+own_per[1]+'</td></tr>' +
+																	//		 '</table>'
+																		//	);
+														//var rows = 5; //here's your number of rows and columns
+														var cols = 1;
+														var table = $('<table><tbody>');
+														$('<tr><th>Company</th><th>Ownership Percent</th></tr>').appendTo(table);
+														
+														for(var r = 0; r < owner.length; r++)
+														{
+															var tr = $('<tr>');
+															for (var c = 0; c < cols; c++) {
+																$('<td>'+ owner[r] +'</td>' + '<td>' + own_per[r] + '</td>').appendTo(tr); //fill in your cells with something meaningful here
+																}
+															tr.appendTo(table);
+															$('#lease_info').html(table);
+														}
+														//table.appendTo('#lease_info');											
+																			
+														
+													  //$('#lease_info').html('<p1>'+ owner[0] +'</p1>');
+													  }
+													});
+												}
+        
+
+        cartodb.createLayer(map, 'https://pwypusa.carto.com/api/v2/viz/f53757a4-a5c6-11e6-97af-0e3ff518bd15/viz.json')
+          .addTo(map)
+		  .done(function(layer){
+		  //cdb.vis.Vis.addInfowindow( map, layer, ['name'], { infowindowTemplate: $('#infowindow_template').html() });
+		    // When the layers inputs change fire this
+            $("input[name='xlayer']").change(function(){
+
+              // Clear the sublayers
+              layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+
+              // For every check activated, add a sublayer
+              $.each($("input[name='xlayer']:checked"), function(){
+                  layer.createSubLayer(layers[$(this).attr("id")]).setInteraction(true);
+				  });
+				});
+				
+			  map.on('click', function(e) {
+				  lat1 = e.latlng.lat;
+				  long1 = e.latlng.lng;
+				  //console.log("Lat: " + lat1 + "|" + 'Long: ' + long1);
+				  //var infowindow = sublayer.infowindow
+				  
+				  //infowindow.set('template', function(data)
+				  customClickFunction(long1, lat1)
+				  
+				  //var sql = new cartodb.SQL({ user: 'pwypusa' });
+				  //var sqLayer = sql.execute("SELECT * FROM final_1 WHERE ST_Contains(final_1.the_geom, ST_GeomFromText('POINT(" + long1 + " " + lat1 + ")', 4326))")
+					//.done(function(data) {
+					//console.log(data.rows);
+					//});	
+				  
+				});	
+		  cdb.vis.Vis.addInfowindow( map, layer, ['name'], { infowindowTemplate: $('#infowindow_template').html() });
+		})		
+    } 
+              
+        window.onload = main;
+    </script>
+		<script type="infowindow/html" id="infowindow_template">
+		<div class="infowindow-custom">
+		  <a href="#close" class="cartodb-popup-close-button close">x</a>
+		   <div class="cartodb-popup-content">
+			<div class="content" style="padding:20px">
+			  <h3>Name:</h3> 
+			  <p>{{content.data.name}}</p>
+		  </div>
+		  <div class="cartodb-popup-tip-container"></div>
+		</div>
+	</script>
+  </body>
+</html>
