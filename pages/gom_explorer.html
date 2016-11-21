@@ -166,12 +166,13 @@
 	  }
     </style>
 
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <!-- <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" /> -->
+	<link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
   </head>
   <body>
     <div id="map"></div>
-	<div id="pwypLogo"> <a href="http://www.pwypusa.org/" target="_blank"> <img id="logo" src="http://publishwhatyoupay.com/wp-content/uploads/2015/10/logo-300x142.jpg"></a> </div>
-	<div id="eafLogo"> <a href="http://www.extractafact.org/" target="_blank"> <img id="logo" src="http://www.extractafact.org/uploads/8/1/1/5/81157300/1464809003.png"></a> </div>
+	<div id="pwypLogo"> <a href="https://www.pwypusa.org/" target="_blank"> <img id="logo" src="http://publishwhatyoupay.com/wp-content/uploads/2015/10/logo-300x142.jpg"></a> </div>
+	<div id="eafLogo"> <a href="https://www.extractafact.org/" target="_blank"> <img id="logo" src="http://www.extractafact.org/uploads/8/1/1/5/81157300/1464809003.png"></a> </div>
 	<div id='sideBar'>
 		<div id="title" class="title">Gulf of Mexico Lease Explorer</div>
 		<div id="head">
@@ -189,7 +190,7 @@
 				<!-- </div> -->
 				
 			</div>
-			<div class="title" id="company_title">Check the boxes to view each companies' current lease assets</div> 			
+			<div class="title" id="company_title">Check the boxes to view each company's current lease assets</div> 			
 			<div id="layer_selector">
 				 <ul>
 				  <li><input type="checkbox" id="anadarko" name="xlayer"><label for="anadarko">Anadarko</label></li>
@@ -214,8 +215,8 @@
  
 
     <!-- include cartodb.js library -->
-    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
-	<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_5r57t7SJDO_mLoAAVGoupkPb6VqRAuA"></script> -->
+    <!-- <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script> -->
+	<script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
 	
     <script>
             
@@ -288,7 +289,10 @@
                 });
        
 		//L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';, {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'}).addTo(map);
-        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+        <!-- L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map); -->
+		//L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+		
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 		function customClickFunction(Xlong, Xlat) {
 											console.log("-------------------------NEW CALL-------------------------");
 											console.log("FIRST Lat: " + Xlat + "|" + 'Long: ' + Xlong);
@@ -392,7 +396,6 @@
 												};
         
 
-		<!-- https://pwypusa.carto.com/api/v2/viz/f53757a4-a5c6-11e6-97af-0e3ff518bd15/viz.json -->
 		<!-- https://pwypusa.carto.com/api/v2/viz/1d53d242-b028-11e6-bf90-0e233c30368f/viz.json -->
         cartodb.createLayer(map, 'https://pwypusa.carto.com/api/v2/viz/1d53d242-b028-11e6-bf90-0e233c30368f/viz.json')
           .addTo(map)
