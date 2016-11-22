@@ -164,15 +164,93 @@
 		border-radius: 25px;
 		<!-- text-align: center; -->
 	  }
+	.modal{
+		display: none; /* Hidden by default */
+		position: absolute; /* Stay in place */
+		z-index: 11; /* Sit on top */
+		left: 0px;
+		top: 5px;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: #47cedb /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+	.modal-content {
+		background-color: white;
+		color: black;
+		font-family: Arial, Helvetica, sans-serif;
+		margin: 15% auto; /* 15% from the top and centered */
+		padding: 20px;
+		-webkit-box-shadow:0 0 20px #000;
+		box-shadow:0 0 20px #000;
+		opacity: 0.95;
+		border: 1px solid #888;
+		width: 80%; /* Could be more or less, depending on screen size */
+	}
+	.close_modal {
+		color: black;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+	}
+	.close_modal:hover,
+	
+	.close_modal:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	} 
+	#myBtn {
+		position:absolute;
+		z-index: 10;
+		left: 50px;
+		top: 33px;
+		-webkit-box-shadow:0 0 20px #000;
+		box-shadow:0 0 20px #000;
+		<!-- background-color: #267fff; -->
+		
+	}
+	#layer_selector_box {
+		position: absolute;
+		bottom: 140px;
+	}
+	
+	
     </style>
 
     <!-- <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" /> -->
 	<link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
   </head>
   <body>
-    <div id="map"></div>
-	<div id="pwypLogo"> <a href="https://www.pwypusa.org/" target="_blank"> <img id="logo" src="http://publishwhatyoupay.com/wp-content/uploads/2015/10/logo-300x142.jpg"></a> </div>
-	<div id="eafLogo"> <a href="https://www.extractafact.org/" target="_blank"> <img id="logo" src="http://www.extractafact.org/uploads/8/1/1/5/81157300/1464809003.png"></a> </div>
+    
+	
+	<div id="map"></div>
+	
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span class="close_modal">x</span>
+			<p>Thank you for visiting Publish What You Pay - US's interactive Gulf of Mexico Federal offshore lease explorer map. <br><br>
+			   This tool was designed using open data from the US Bureau of Ocean Energy Management (BOEM), available at <a href="https://www.data.boem.gov/homepg/data_center/index.asp" target="_blank">data.boem.gov</a>. <br><br>
+			   To use the map, simply click on any visible lease block to see the lease number (<i>e.g. G15607</i>), the block area code and block number
+					(<i>e.g. GC 256</i>), and the royalty rate in the popup window. At the same time, you can see all of the leases current owners, their 
+					ownership stake in the lease,
+					and the amount of oil and gas produced from the lease since 2014 in the sidebar on the right. Visible on default
+					are all the currently owned lease blocks in the Gulf of Mexico.<br><br>
+			   You can filter the data by company by selecting one or more of the checkboxes in the sidebar for some of the major leaseholders in the
+					Gulf of Mexico. <br><br>
+			   This interactive map was built using Carto, Carto.js, and R. You can see the lease and production datasets used in the map at 
+			   <a href="https://pwypusa.carto.com/" target="_blank">pwypusa.carto.com</a>. Be sure to let us know what you think on Twitter 
+			   <a href="https://twitter.com/pwypusa?lang=en" target="_blank">@PWYPUS</a> and check out our other data projects at 
+			   <a href="http://www.extractafact.org/" target="_blank">ExtractAFact.org</a>!</p>
+				
+		</div>
+	
+	</div>
+	
+	<button id="myBtn">Click for info</button>
+	<div id="pwypLogo"> <a href="http://www.pwypusa.org/" target="_blank"> <img id="logo" src="http://publishwhatyoupay.com/wp-content/uploads/2015/10/logo-300x142.jpg"></a> </div>
+	<div id="eafLogo"> <a href="http://www.extractafact.org/" target="_blank"> <img id="logo" src="http://www.extractafact.org/uploads/8/1/1/5/81157300/1464809003.png"></a> </div>
 	<div id='sideBar'>
 		<div id="title" class="title">Gulf of Mexico Lease Explorer</div>
 		<div id="head">
@@ -190,6 +268,7 @@
 				<!-- </div> -->
 				
 			</div>
+			<div id="layer_selector_box">
 			<div class="title" id="company_title">Check the boxes to view each company's current lease assets</div> 			
 			<div id="layer_selector">
 				 <ul>
@@ -206,7 +285,7 @@
 				  <li><a href="#base" id="base" class="button base">Clear layers</a></li>
 				</ul>
 			</div>
-		
+			</div>
 		</div>
 	</div>
 
@@ -221,7 +300,31 @@
     <script>
             
       function main() {
-	  
+		var modal = document.getElementById('myModal');
+
+		// Get the button that opens the modal
+		var btn = document.getElementById("myBtn");
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close_modal")[0];
+
+		// When the user clicks on the button, open the modal 
+		btn.onclick = function() {
+			modal.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};	  
+		
 	    var sublayers = [];
         // Layers definition
         var layers = {
