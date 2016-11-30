@@ -413,7 +413,7 @@
           },
 		  base: {
 			sql: 'SELECT * FROM owner_lease2_merge',//'SELECT owner_lease2_merge.name, owner_lease2_merge.lease_number, production_2016.oil FROM owner_lease2_merge, production_2016 WHERE owner_lease2_merge.lease_number = production_2016.lease_number',  //'SELECT * FROM owner_lease2_merge',
-			cartocss: '#owner_lease2_merge{polygon-fill: white; line-color: white; line-opacity: 1; polygon-opacity: .6}',
+			cartocss: '#owner_lease2_merge{polygon-fill: white; line-color: #ededed; line-opacity: 1; polygon-opacity: 1}',
 			interactivity: 'name,lease_number, royalty_ra, block_code'
 		  },
 		  protrac: {
@@ -556,7 +556,7 @@
 			
 			$('.button').click(function(){
 				$('input:checkbox:not("#protrac")').removeAttr('checked');
-				layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+				
 				layer.createSubLayer(layers[$(this).attr("id")]).setInteraction(true);
 				});
 				
