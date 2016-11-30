@@ -254,7 +254,8 @@
 					company ownership stake in the lease, and the amount of oil and gas produced from the lease since 2014 in the sidebar on the right. <br><br>
 					
 			   Visible on default are all the currently owned lease blocks in the Gulf of Mexico. You can filter the data by company by selecting
-			   one or more of the checkboxes in the sidebar containing some of the major leaseholders in the Gulf of Mexico.<br><br>
+			   one or more of the checkboxes in the sidebar containing some of the major leaseholders in the Gulf of Mexico. Company leases that had
+			   any production in 2014-2016 are shown with a black border.<br><br>
 			   
 			   You can also view the Gulf of Mexico protraction areas by checking <i>Show Protractions</i>. These polygons are helpful in identifying a
 			   specific area of the Gulf, and correspond to the block area code (<i>e.g. GC</i>) in the lease popup. Viewing the protractions also
@@ -351,69 +352,73 @@
 			if (event.target == modal) {
 				modal.style.display = "none";
 			}
-		};	  
+		};	
+
+		var style = $('#choropleth').text(); // get style
+			console.log(style);
 		
 	    var sublayers = [];
         // Layers definition
         var layers = {
           bhp:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 2277',
-			cartocss: '#GOM_lease_data{polygon-fill: #e65400; line-color: white; polygon-opacity: .7;}',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 2277',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  bp: {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num IN (2481,114)',
-			cartocss: '#GOM_lease_data{polygon-fill: #009400; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num IN (2481,114)',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  shell: {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num IN (689,2117)',
-			cartocss: '#layer{polygon-fill: #f6d119; line-color: white; polygon-opacity: .7;}',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num IN (689,2117)',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  statoil: {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num IN (2528, 2748)',
-			cartocss: '#layer{polygon-fill: #de569b; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num IN (2528, 2748)',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
+		  
 		  total_sa: {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 1500',
-			cartocss: '#layer{polygon-fill: #002776; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 1500',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
-		  anadarko:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 2219',
-			cartocss: '#GOM_lease_data{polygon-fill: #005cb9; line-color: white; polygon-opacity: .7; }',
+		    anadarko:  {
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 2219',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  chevron:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 78',
-			cartocss: '#GOM_lease_data{polygon-fill: #2490c9; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 78',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  conoco:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 56',
-			cartocss: '#GOM_lease_data{polygon-fill: #d21b1f; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 56',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  exxon:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 276',
-			cartocss: '#GOM_lease_data{polygon-fill: #df0032; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 276',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  cie:  {
-            sql: 'SELECT * FROM GOM_lease_data WHERE mms_company_num = 2873',
-			cartocss: '#GOM_lease_data{polygon-fill: #195489; line-color: white; polygon-opacity: .7; }',
+            sql: 'SELECT * FROM owner_lease2_merge WHERE mms_company_num = 2873',
+			cartocss: style,
 			interactivity: 'name,lease_number, royalty_ra, block_code'
           },
 		  base: {
-			sql: 'SELECT * FROM GOM_lease_data',//'SELECT GOM_lease_data.name, GOM_lease_data.lease_number, production_2016.oil FROM GOM_lease_data, production_2016 WHERE GOM_lease_data.lease_number = production_2016.lease_number',  //'SELECT * FROM GOM_lease_data',
-			cartocss: '#GOM_lease_data{polygon-fill: white; line-color: black; line-width: .3}',
+			sql: 'SELECT * FROM owner_lease2_merge',//'SELECT owner_lease2_merge.name, owner_lease2_merge.lease_number, production_2016.oil FROM owner_lease2_merge, production_2016 WHERE owner_lease2_merge.lease_number = production_2016.lease_number',  //'SELECT * FROM owner_lease2_merge',
+			cartocss: '#owner_lease2_merge{polygon-fill: white; line-color: white; line-opacity: 1; polygon-opacity: .6}',
 			interactivity: 'name,lease_number, royalty_ra, block_code'
 		  },
 		  protrac: {
 			sql: 'SELECT * FROM protclip',
-			cartocss: '#protclip{polygon-fill: white; polygon-opacity: 0; line-color: black}'
+			cartocss: '#protclip{polygon-fill: white; polygon-opacity: 0; line-color: white}'
 		  }
 		 };
 		 
@@ -432,11 +437,11 @@
 											console.log("-------------------------NEW CALL-------------------------");
 											console.log("FIRST Lat: " + Xlat + "|" + 'Long: ' + Xlong);
 											var sql = new cartodb.SQL({ user: 'pwypusa' });
-											sql.execute("SELECT * FROM GOM_lease_data WHERE ST_Contains(GOM_lease_data.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))")
+											sql.execute("SELECT * FROM owner_lease2_merge WHERE ST_Contains(owner_lease2_merge.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))")
 												.done(function(data){console.log("SECOND  " + data + " this one")});
 											
 											///Query for owner stats
-											q="SELECT * FROM GOM_lease_data WHERE ST_Contains(GOM_lease_data.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))"
+											q="SELECT * FROM owner_lease2_merge WHERE ST_Contains(owner_lease2_merge.the_geom, ST_GeomFromText('POINT(" + Xlong + " " + Xlat + ")', 4326))"
 											$.ajax({//    https://pwypusa.carto.com/api/v2/sql?q=
 													url: "https://pwypusa.carto.com/api/v2/sql?q=" + q,
 													dataType: "jsonp",
@@ -533,27 +538,25 @@
 
 		
 		<!-- https://pwypusa.carto.com/api/v2/viz/1d53d242-b028-11e6-bf90-0e233c30368f/viz.json -->
-		<!-- https://pwypusa.carto.com/api/v2/viz/1d53d242-b028-11e6-bf90-0e233c30368f/viz.json -->
-        cartodb.createLayer(map, 'https://pwypusa.carto.com/api/v2/viz/1d53d242-b028-11e6-bf90-0e233c30368f/viz.json')
+		<!-- https://pwypusa.carto.com/api/v2/viz/26c1f478-b71a-11e6-a24e-0e05a8b3e3d7/viz.json -->
+        cartodb.createLayer(map, 'https://pwypusa.carto.com/api/v2/viz/26c1f478-b71a-11e6-a24e-0e05a8b3e3d7/viz.json')
           .addTo(map)
 		  .done(function(layer){
 			
-		  
+			
 		    
             $("input[name='xlayer']").change(function(){									// When the layers inputs change fire this
 				
 				layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});		// Clear the sublayers
-				//layer.createSubLayer(layers['protrac'];
+				
 				$.each($("input[name='xlayer']:checked"), function(){						// For every check activated, add a sublayer
 					layer.createSubLayer(layers[$(this).attr("id")]).setInteraction(true);
-					//layer.createSubLayer(layers['protrac'];
 					});
 				});
 			
 			$('.button').click(function(){
 				$('input:checkbox:not("#protrac")').removeAttr('checked');
 				layer.createSubLayer(layers[$(this).attr("id")]).setInteraction(true);
-				//layer.createSubLayer(layers['protrac']);
 				});
 				
 			$('.protrac').click(function(){				
@@ -575,7 +578,66 @@
               
         window.onload = main;
     </script>
-		<script type="infowindow/html" id="infowindow_template">
+	<script type="cartocss/text" id="choropleth">
+		#owner_lease2_merge [produced = true] {
+			/*polygon-fill: #de569b; */
+			line-color: black;
+			line-width: 1.5;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [produced = false] {
+			polygon-fill: #de569b;
+			polygon-opacity: .7;
+			}
+			
+		#owner_lease2_merge [mms_company_num = 2277] { /*bhp*/
+			polygon-fill: #e65400;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 2481], /*bp*/
+		#owner_lease2_merge [mms_company_num = 114]	{
+			polygon-fill: #009400;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 2117], /*shell*/
+		#owner_lease2_merge [mms_company_num = 689]	{
+			polygon-fill: #f6d119;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 2528], /*statoil*/
+		#owner_lease2_merge [mms_company_num = 2748]	{
+			polygon-fill: #de569b;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 1500] { /*total_sa*/
+			polygon-fill: #002776;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 2219] { /*anadarko*/
+			polygon-fill: #005cb9;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 78] { /*chevron*/
+			polygon-fill: #2490c9;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 56] { /*conoco*/
+			polygon-fill: #d21b1f;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 276] { /*exxon*/
+			polygon-fill: #df0032;
+			polygon-opacity: .7;
+			}
+		#owner_lease2_merge [mms_company_num = 2873] { /*cie*/
+			polygon-fill: #195489;
+			polygon-opacity: .7;
+			}
+		
+		
+		
+	</script>
+	<script type="infowindow/html" id="infowindow_template">
 		<div class="infowindow-custom">
 		  <a href="#close" class="cartodb-popup-close-button close" style="color:black;"><b>X</b></a>
 		   <div class="cartodb-popup-content">
