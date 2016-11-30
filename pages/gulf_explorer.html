@@ -556,6 +556,7 @@
 			
 			$('.button').click(function(){
 				$('input:checkbox:not("#protrac")').removeAttr('checked');
+				layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
 				layer.createSubLayer(layers[$(this).attr("id")]).setInteraction(true);
 				});
 				
